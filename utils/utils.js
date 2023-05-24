@@ -1,6 +1,12 @@
 
-const greetName = (name) => {
-  console.log(`Howdy ${name}!`)
+const parseGivenInt = (value) => {
+  const parsedValue = parseInt(value);
+
+  if(Number.isNaN(parsedValue)) {
+    throw new commander.InvalidArgumentError('Not a number.');
+  }
+
+  return parsedValue;
 }
 
-module.exports = {greetName}
+module.exports = {parseGivenInt}
