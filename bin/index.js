@@ -11,18 +11,17 @@ const { getSystemInfo,
 
 const log = console.log;
 const highlight = chalk.cyan
-const util = require("util")
-const format = util.format
 
 program.command("sys")
   .description("get information of system")
   .action(() => {
-    let {host_name, sys_uptime} = getSystemInfo();
+    let {host_name, sys_uptime, user_name} = getSystemInfo();
     let {os_name, os_platform, os_version, os_release} = getOSInfo();
     let {cpu_model, cpu_speed, processor_count} = getCPUInfo();
     let {total_mem, free_mem} = getMemInfo();
     let network = getNetInfo()
 
+    log(highlight(`@${user_name}`))
     log(`${highlight("Host")}: ${host_name}`);
     log(`${highlight("Uptime")}: ${sys_uptime}`)
     log(`${highlight("OS")}:`)
@@ -47,12 +46,19 @@ program.command("sys")
       // Get the properties of the interface for easier access
       let interface_properties = network[i][interface_name]
 
+      // exclude the loopback interface by checking its internal property
+      if(interface_properties.internal){
+        continue;
+      }
+
       /* 
       * Get the names of the properties of the interface.
       * Each interface may have different properties than the others.
       */
+
       let interface_names = Object.keys(network[i][interface_name])
 
+      // Log the current interface
       console.log(`   ${highlight(interface_name)}:`)
 
       // loop through the properties of each interface
