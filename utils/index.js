@@ -1,20 +1,31 @@
 
 const formatBytes = (bytes) => {
   var units = ['B', 'KB', 'MB', 'GB', 'TB'],
-  mb = bytes,
+  given_bytes = bytes,
   i;
-
-  for (i = 0; bytes >= 1024 && i < 3; i++) {
-    mb /= 1024;
+  // format bytes into MB
+  for (i = 0; given_bytes >= 1024; i++) {
+    given_bytes /= 1024;
   }
 
-  return mb.toFixed(2) + units[i];
+  return given_bytes.toFixed(2) + units[i];
 }
 
 const formatSecs = (sec) => {
   if(sec < 3600) return `${Math.floor(sec / 60)} mins`
 
-  return `${Math.floor(sec / 3600)} hrs`
+  let total_minutes = Math.floor(sec / 60)
+
+  let hrs = Math.floor(total_minutes / 60)
+  let mins = total_minutes % 60
+
+  return `${hrs} ${hrs < 2 ? "hr" : "hrs"}, ${mins} ${mins < 2 ? "min" : "mins"}`
 }
 
-module.exports = {formatBytes, formatSecs}
+const convertMHzToGHz = (mhz) => {
+  let ghz = (mhz / 1000).toFixed(2);
+
+  return `${ghz} GHz`
+}
+
+module.exports = {formatBytes, formatSecs, convertMHzToGHz}
