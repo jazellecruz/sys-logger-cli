@@ -1,73 +1,24 @@
 #!/usr/bin/env node
 
+/* RUNS ON NODE VERSIONS 18.16.0 and above. */
+
 const commander = require("commander");
 const program = new commander.Command();
-const chalk = require("chalk");
-const { getSystemInfo, 
-       getOSInfo,
-       getCPUInfo,
-       getMemInfo,
-       getNetInfo} = require("../lib/index");
 
-const log = console.log;
-const highlight = chalk.cyan
+const logSysInfo = require("../lib/index");
 
 program.command("sys")
-  .description("get information of system")
-  .action(() => {
-    let {host_name, sys_uptime, user_name} = getSystemInfo();
-    let {os_name, os_platform, os_version, os_release} = getOSInfo();
-    let {cpu_model, cpu_speed, processor_count} = getCPUInfo();
-    let {total_mem, free_mem} = getMemInfo();
-    let network = getNetInfo()
-
-    log(highlight(`@${user_name}`))
-    log(`${highlight("Host")}: ${host_name}`);
-    log(`${highlight("Uptime")}: ${sys_uptime}`)
-    log(`${highlight("OS")}:`)
-    log(`   ${highlight("Name")}: ${os_name}`)
-    log(`   ${highlight("Platform")}: ${os_platform}`)
-    log(`   ${highlight("Version")}: ${os_version}`)
-    log(`   ${highlight("Release")}: ${os_release}`)
-    log(`${highlight("CPU")}:`)
-    log(`   ${highlight("Model")}: ${cpu_model}`)
-    log(`   ${highlight("Speed")}: ${cpu_speed}`)
-    log(`   ${highlight("Processor Count")}: ${processor_count}`)
-    log(`${highlight("Memory")}:`)
-    log(`   ${highlight("Total mem")}: ${total_mem}`)
-    log(`   ${highlight("Free mem")}: ${free_mem}`)
-    log(`${highlight("Network")}:`)  
-
-    // This is for logging the networks that have nested objects
-    for(i = 0; i < network.length; i++){
-      // Get the name of the interface for the current iteration and remove it from the array
-      let interface_name = Object.keys(network[i]).pop()
-
-      // Get the properties of the interface for easier access
-      let interface_properties = network[i][interface_name]
-
-      // exclude the loopback interface by checking its internal property
-      if(interface_properties.internal){
-        continue;
-      }
-
-      /* 
-      * Get the names of the properties of the interface.
-      * Each interface may have different properties than the others.
-      */
-
-      let interface_names = Object.keys(network[i][interface_name])
-
-      // Log the current interface
-      console.log(`   ${highlight(interface_name)}:`)
-
-      // loop through the properties of each interface
-      for(j = 0; j < interface_names.length; j++){
-        console.log(`      ${highlight(interface_names[j])}: ${interface_properties[interface_names[j]]}`)
-      }
-
-    } 
-
+  .description("display all information about system")
+  .option("--os-only", "display os details only")
+  .option("--cpu-only", "display cpu details only")
+  .option("--mem-only", "display memory details only")
+  .option("--net-only", "display net details only")
+  .action((options) => {
+    try{
+      logSysInfo(options)
+    } catch(err) {
+      console.error(err)
+    }
   }); 
 
 program.parse(process.argv);
