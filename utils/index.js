@@ -3,7 +3,7 @@ const formatBytes = (bytes) => {
   var units = ['B', 'KB', 'MB', 'GB', 'TB'],
   given_bytes = bytes,
   i;
-  // format bytes into MB
+
   for (i = 0; given_bytes >= 1024; i++) {
     given_bytes /= 1024;
   }
@@ -27,5 +27,7 @@ const convertMHzToGHz = (mhz) => {
 
   return `${ghz} GHz`
 }
+
+
 
 module.exports = {formatBytes, formatSecs, convertMHzToGHz}
