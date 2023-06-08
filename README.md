@@ -16,7 +16,7 @@ $ sys-logger [command] [options]
 ## Commands
 
 ```shell
-$ sys-logger sys <options>  fetch and log system info
+$ sys-logger sys [options]  fetch and log system info
 ```
 
 ## Options
