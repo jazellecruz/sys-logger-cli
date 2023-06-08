@@ -6,6 +6,7 @@ const commander = require("commander");
 const program = new commander.Command();
 
 const logSysInfo = require("../lib/index");
+const logError = require("../utils/error");
 
 program.command("sys")
   .description("display all information about system")
@@ -17,7 +18,7 @@ program.command("sys")
     try{
       logSysInfo(options)
     } catch(err) {
-      console.error(err)
+      logError(err);
     }
   }); 
 
